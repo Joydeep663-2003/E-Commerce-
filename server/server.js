@@ -11,15 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Allow requests from localhost and Vercel
+// Allow requests from localhost and Vercel frontend
 const allowedOrigins = [
-  'http://localhost:3000', // local frontend
+  'http://localhost:3000', // local dev
   'https://joydeep663-2003s-projects-e-commerce.vercel.app' // Vercel frontend
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (like Postman)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {

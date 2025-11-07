@@ -6,7 +6,6 @@ import axios from 'axios';
 const Products = () => {
   const state = useContext(GlobalState);
 
-  // Use state from GlobalState if available, otherwise local empty array
   const [products, setProducts] = state?.productAPI?.products || [[], () => {}];
   const [isAdmin] = state?.userAPI?.isAdmin || [false];
 
@@ -15,13 +14,13 @@ const Products = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get('https://e-commerce-g3k8.onrender.com/api/products');
-        setProducts(res.data.products || []);
+        setProducts(res.data.products);
       } catch (err) {
         console.error('Error fetching products:', err);
       }
     };
     fetchProducts();
-  }, [setProducts]);
+  }, []);
 
   const handleCheck = (id) => {
     const newProducts = products.map(product =>
@@ -47,7 +46,12 @@ const Products = () => {
       {products.map(product => product._id && (
         <ProductList
           key={product._id}
-          product={product}
+          product={{
+            ...product,
+            images: Array.isArray(product.images)
+              ? product.images.map(img => `https://e-commerce-g3k8.onrender.com${img}`)
+              : [`https://e-commerce-g3k8.onrender.com${product.images}`]
+          }}
           isAdmin={isAdmin}
           handleCheck={handleCheck}
           deleteProduct={deleteProduct}
