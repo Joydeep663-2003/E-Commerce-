@@ -2,7 +2,7 @@ import React from 'react';
 import BtnRender from './BtnRender'; 
 
 const ProductList = ({ product, deleteProduct }) => {
-  const RENDER_URL = 'https://e-commerce-g3k8.onrender.com'; // Render backend URL
+  const RENDER_URL = process.env.REACT_APP_API_URL; // environment variable
 
   const getImageUrl = (imageData) => {
     if (!imageData) return '';
