@@ -10,8 +10,21 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
+
+// Allow requests from localhost and Vercel
+const allowedOrigins = [
+  'http://localhost:3000', // local dev
+  'https://joydeep663-2003s-projects-e-commerce.vercel.app' // Vercel frontend
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000', // frontend URL
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
