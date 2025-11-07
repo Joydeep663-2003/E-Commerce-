@@ -4,12 +4,13 @@ import axios from 'axios';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [isAdmin] = useState(false); // set true if needed
+  const [isAdmin] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL; // environment variable
+  const API_URL = process.env.REACT_APP_API_URL; // Must be set in Vercel env
 
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!API_URL) return console.error("API_URL is undefined!");
       try {
         const res = await axios.get(`${API_URL}/api/products`);
         setProducts(res.data.products);
@@ -24,12 +25,14 @@ const Products = () => {
 
   return (
     <div className="products">
-      {products.map(product => product._id && (
+      {products.map(product => (
         <ProductList
           key={product._id}
           product={{
             ...product,
-            images: product.images.map(img => `${API_URL}${img}`)
+            images: product.images.map(img =>
+              img.startsWith('http') ? img : `${API_URL}${img}`
+            )
           }}
           isAdmin={isAdmin}
         />

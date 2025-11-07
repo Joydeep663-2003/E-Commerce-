@@ -1,18 +1,12 @@
 import React from 'react';
-import BtnRender from './BtnRender'; 
+import BtnRender from './BtnRender';
 
 const ProductList = ({ product, deleteProduct }) => {
-  const RENDER_URL = process.env.REACT_APP_API_URL; // environment variable
+  const API_URL = process.env.REACT_APP_API_URL;
 
-  const getImageUrl = (imageData) => {
-    if (!imageData) return '';
-    if (typeof imageData === 'string') {
-      return imageData.startsWith('http') ? imageData : `${RENDER_URL}${imageData}`;
-    }
-    if (typeof imageData === 'object' && imageData.url) {
-      return imageData.url.startsWith('http') ? imageData.url : `${RENDER_URL}${imageData.url}`;
-    }
-    return '';
+  const getImageUrl = (image) => {
+    if (!image) return '';
+    return image.startsWith('http') ? image : `${API_URL}${image}`;
   };
 
   const imageUrl = Array.isArray(product.images)
