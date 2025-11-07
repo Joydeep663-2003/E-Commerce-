@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GlobalState } from '../../../GlobalState';
 import ProductList from '../utils/ProductList/ProductList';
 import axios from 'axios';
@@ -6,11 +6,22 @@ import axios from 'axios';
 const Products = () => {
   const state = useContext(GlobalState);
 
-  // Products state from GlobalState
   const [products, setProducts] = state?.productAPI?.products || [[], () => {}];
   const [isAdmin] = state?.userAPI?.isAdmin || [false];
 
-  // Toggle product check (admin)
+  // Fetch products from Render backend on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('https://e-commerce-g3k8.onrender.com/api/products');
+        setProducts(res.data.products);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const handleCheck = (id) => {
     const newProducts = products.map(product =>
       product._id === id ? { ...product, checked: !product.checked } : product
@@ -18,10 +29,8 @@ const Products = () => {
     setProducts(newProducts);
   };
 
-  // Delete product (admin)
   const deleteProduct = async (id, public_id) => {
     try {
-      // Call Render backend with full URL
       await axios.post('https://e-commerce-g3k8.onrender.com/api/destroy', { public_id });
       await axios.delete(`https://e-commerce-g3k8.onrender.com/api/products/${id}`);
       setProducts(products.filter(product => product._id !== id));
@@ -30,7 +39,7 @@ const Products = () => {
     }
   };
 
-  if (!products.length) return <p>No products available.</p>;
+  if (!products.length) return <p>Loading products...</p>;
 
   return (
     <div className="products" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
@@ -39,7 +48,6 @@ const Products = () => {
           key={product._id}
           product={{
             ...product,
-            // Prepend Render URL to images for production
             images: product.images.map(img => `https://e-commerce-g3k8.onrender.com${img}`)
           }}
           isAdmin={isAdmin}
