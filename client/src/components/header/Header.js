@@ -1,0 +1,67 @@
+import React, { useContext } from 'react';
+import { MdOutlineMenu, MdClose, MdOutlineAddShoppingCart } from "react-icons/md";
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { GlobalState } from '../../GlobalState';
+
+const Header = () => {
+  const state = useContext(GlobalState);
+
+  // ✅ Safe destructuring with fallback to avoid hook errors
+  const [isLogged, setIsLogged] = state?.userAPI?.isLogged || [false, () => {}];
+  const [isAdmin, setIsAdmin] = state?.userAPI?.isAdmin || [false, () => {}];
+  const [cart] = state?.userAPI?.cart || [[], () => {}];
+
+  const logoutUser = async () => {
+    try {
+      await axios.get('/user/logout');
+      localStorage.clear();
+      setIsAdmin(false);
+      setIsLogged(false);
+    } catch (err) {
+      alert(err.response?.data?.msg || "Logout failed");
+    }
+  };
+
+  const adminRouter = () => (
+    <>
+      <li><Link to='/create_product'>Create Product</Link></li>
+      <li><Link to='/category'>Categories</Link></li>
+    </>
+  );
+
+  const loggedRouter = () => (
+    <>
+      <li><Link to='/history'>History</Link></li>
+      <li><Link to='/' onClick={logoutUser}>Logout</Link></li>
+    </>
+  );
+
+  return (
+    <header>
+      <div className='menu'>
+        <MdOutlineMenu size={30} />
+      </div>
+
+      <div className='logo'>
+        <h1><Link to="/">{isAdmin ? 'Admin' : 'Shopping'}</Link></h1>
+      </div>
+
+      <ul>
+        <li><Link to="/">{isAdmin ? 'Products' : 'Shop'}</Link></li>
+        {isAdmin && adminRouter()}
+        {isLogged ? loggedRouter() : <li><Link to="/login">Login or Register</Link></li>}
+        <li><MdClose size={30} className='menu' /></li>
+      </ul>
+
+      {!isAdmin && (
+        <div className='cart-icon'>
+          <span>{cart.length}</span>
+          <Link to='/cart'><MdOutlineAddShoppingCart size={30} /></Link>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
