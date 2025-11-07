@@ -1,23 +1,13 @@
 import React from 'react';
-import BtnRender from './BtnRender'; 
+import BtnRender from './BtnRender';
+
+const RENDER_URL = 'https://e-commerce-g3k8.onrender.com'; // Render backend URL
 
 const ProductList = ({ product, deleteProduct }) => {
-  const RENDER_URL = 'https://e-commerce-g3k8.onrender.com'; // Render backend URL
-
-  const getImageUrl = (imageData) => {
-    if (!imageData) return '';
-    if (typeof imageData === 'string') {
-      return imageData.startsWith('http') ? imageData : `${RENDER_URL}${imageData}`;
-    }
-    if (typeof imageData === 'object' && imageData.url) {
-      return imageData.url.startsWith('http') ? imageData.url : `${RENDER_URL}${imageData.url}`;
-    }
-    return '';
-  };
-
-  const imageUrl = Array.isArray(product.images)
-    ? getImageUrl(product.images[0])
-    : getImageUrl(product.images);
+  // Make sure images array exists
+  const imageUrl = Array.isArray(product.images) && product.images.length > 0
+    ? (product.images[0].startsWith('http') ? product.images[0] : `${RENDER_URL}${product.images[0]}`)
+    : '';
 
   return (
     <div className="product_card">
