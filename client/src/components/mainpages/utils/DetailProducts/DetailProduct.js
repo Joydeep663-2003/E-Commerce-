@@ -16,9 +16,10 @@ const DetailProduct = () => {
   const state = useContext(GlobalState);
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const [products] = state.productAPI.products || [[], () => {}];
+  // ✅ Correct: products is already an array
+  const products = state.productAPI?.products || [];
   const [isLogged] = state.isLogged || [false];
-  const addCart = state.userAPI?.addCart || (() => {});
+  const addCart = state.addToCart || (() => {}); // Use global addToCart
 
   const [detailProduct, setDetailProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,9 +52,9 @@ const DetailProduct = () => {
     ? getImageUrl(detailProduct.images[0])
     : getImageUrl(detailProduct.images);
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     if (!isLogged) return alert('Please login to add items to cart.');
-    addCart(detailProduct);
+    await addCart(detailProduct);
   };
 
   return (

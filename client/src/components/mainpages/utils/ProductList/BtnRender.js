@@ -6,20 +6,24 @@ const BtnRender = ({ product, deleteProduct }) => {
   const state = useContext(GlobalState);
   const [isAdmin] = state.isAdmin;
   const [isLogged] = state.isLogged;
-  const userAPI = state.userAPI;
+  const { addToCart, user } = state;
   const [loading, setLoading] = useState(false);
 
-  const userName = userAPI?.user[0]?.name || '';
+  const userName = user?.name || '';
 
   const handleBuy = async () => {
     if (!isLogged) return alert('Please login first.');
-    if (!userAPI) return alert('User data is loading, please wait.');
 
-    setLoading(true);
-    const success = await userAPI.addCart(product);
-    setLoading(false);
-
-    if (success) alert('Product added to cart!');
+    try {
+      setLoading(true);
+      await addToCart(product);
+      setLoading(false);
+      alert('Product added to cart!');
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+      alert('Failed to add product to cart.');
+    }
   };
 
   return (
@@ -31,7 +35,7 @@ const BtnRender = ({ product, deleteProduct }) => {
         </>
       ) : (
         <>
-          <button onClick={handleBuy} disabled={!isLogged || !userAPI || loading}>
+          <button onClick={handleBuy} disabled={!isLogged || loading}>
             {loading ? 'Adding...' : 'Buy'}
           </button>
           <Link to={`/detail/${product._id}`}>View</Link>

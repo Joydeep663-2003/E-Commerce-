@@ -36,7 +36,6 @@ const userCtrl = {
       const accessToken = createAccessToken({ id: user._id });
       const refreshToken = createRefreshToken({ id: user._id });
 
-      // Set refresh token cookie for Render (HTTPS)
       res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
         path: '/user/refresh_token',
@@ -99,6 +98,7 @@ const userCtrl = {
 
       user.cart = req.body.cart;
       await user.save();
+
       res.json({ msg: 'Cart updated successfully.', cart: user.cart });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

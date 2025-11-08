@@ -1,23 +1,33 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MdOutlineMenu, MdClose, MdOutlineAddShoppingCart } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { GlobalState } from '../../GlobalState';
+import './header.css';
 
 const Header = () => {
   const state = useContext(GlobalState);
 
-  // ✅ Safe destructuring with fallback to avoid hook errors
-  const [isLogged, setIsLogged] = state?.userAPI?.isLogged || [false, () => {}];
-  const [isAdmin, setIsAdmin] = state?.userAPI?.isAdmin || [false, () => {}];
-  const [cart] = state?.userAPI?.cart || [[], () => {}];
+  const [isLogged] = state.isLogged;
+  const [isAdmin] = state.isAdmin;
+  const [cart] = state.cart;
+  const token = state.token[0];
+
+  const [bump, setBump] = useState(false);
+
+  // Trigger bump animation when cart changes
+  useEffect(() => {
+    if (cart.length === 0) return;
+    setBump(true);
+    const timer = setTimeout(() => setBump(false), 200);
+    return () => clearTimeout(timer);
+  }, [cart]);
 
   const logoutUser = async () => {
     try {
-      await axios.get('/user/logout');
+      await axios.get(`${process.env.REACT_APP_API_URL}/user/logout`, { withCredentials: true });
       localStorage.clear();
-      setIsAdmin(false);
-      setIsLogged(false);
+      window.location.href = '/'; // redirect after logout
     } catch (err) {
       alert(err.response?.data?.msg || "Logout failed");
     }
@@ -36,6 +46,9 @@ const Header = () => {
       <li><Link to='/' onClick={logoutUser}>Logout</Link></li>
     </>
   );
+
+  // Total quantity in cart
+  const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return (
     <header>
@@ -56,7 +69,7 @@ const Header = () => {
 
       {!isAdmin && (
         <div className='cart-icon'>
-          <span>{cart.length}</span>
+          <span className={bump ? 'bump' : ''}>{totalQuantity}</span>
           <Link to='/cart'><MdOutlineAddShoppingCart size={30} /></Link>
         </div>
       )}
