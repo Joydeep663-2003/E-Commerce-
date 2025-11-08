@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -7,6 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 const Register = () => {
   const [user, setUser] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onChangeInput = (e) => {
     const { name, value } = e.target;
@@ -17,11 +18,9 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/user/register`, user, {
-        withCredentials: true,
-      });
-      localStorage.setItem('firstLogin', true);
-      window.location.reload();
+      await axios.post(`${API_URL}/user/register`, user, { withCredentials: true });
+      alert('Registration successful! Please login.');
+      navigate('/login');
     } catch (err) {
       alert(err?.response?.data?.msg || 'Registration failed.');
     } finally {

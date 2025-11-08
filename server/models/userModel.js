@@ -4,8 +4,8 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: Number, default: 0 },
+  role: { type: Number, default: 0 }, // 0 = user, 1 = admin
   cart: { type: Array, default: [] }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Users', userSchema);
+module.exports = mongoose.model('Users', userSchema); // ✅ Export model as 'Users'

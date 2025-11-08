@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GlobalState } from '../../../GlobalState';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Login = () => {
   const [user, setUser] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+
+  const state = useContext(GlobalState);
+  const [, setToken] = state.token;
+  const [, setIsLogged] = state.isLogged;
+  const navigate = useNavigate();
 
   const onChangeInput = (e) => {
     const { name, value } = e.target;
@@ -17,12 +23,11 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/user/login`, user, {
-        withCredentials: true,
-      });
+      const res = await axios.post(`${API_URL}/user/login`, user, { withCredentials: true });
       localStorage.setItem('firstLogin', true);
-      // reload to update DataProvider
-      window.location.reload();
+      setToken(res.data.accessToken);
+      setIsLogged(true);
+      navigate('/');
     } catch (err) {
       alert(err?.response?.data?.msg || 'Login failed.');
     } finally {

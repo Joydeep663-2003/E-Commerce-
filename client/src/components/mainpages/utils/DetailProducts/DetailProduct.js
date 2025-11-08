@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { GlobalState } from '../../../../GlobalState';
+import axios from 'axios';
 import './detailProduct.css';
 
 const getImageUrl = (img) => {
@@ -13,32 +14,43 @@ const getImageUrl = (img) => {
 const DetailProduct = () => {
   const { id } = useParams();
   const state = useContext(GlobalState);
+  const API_URL = process.env.REACT_APP_API_URL;
 
-  // Get products array from GlobalState
   const [products] = state.productAPI.products || [[], () => {}];
-
-  // Get logged-in state and cart function
   const [isLogged] = state.isLogged || [false];
   const addCart = state.userAPI?.addCart || (() => {});
 
   const [detailProduct, setDetailProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Find the product with the matching ID
   useEffect(() => {
-    if (id && products.length > 0) {
-      const found = products.find(product => product._id === id);
-      setDetailProduct(found || null);
-    }
-  }, [id, products]);
+    const fetchProduct = async () => {
+      try {
+        // Try to find in global products first
+        let product = products.find(p => p._id === id);
+        if (!product) {
+          // If not found, fetch from backend
+          const res = await axios.get(`${API_URL}/api/products/${id}`);
+          product = res.data;
+        }
+        setDetailProduct(product);
+      } catch (err) {
+        console.error('Error fetching product:', err.response?.data?.msg || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (products.length > 0 && !detailProduct) return <p>Product not found.</p>;
-  if (!detailProduct) return <p>Loading product details...</p>;
+    if (id) fetchProduct();
+  }, [id, products, API_URL]);
+
+  if (loading) return <p>Loading product details...</p>;
+  if (!detailProduct) return <p>Product not found.</p>;
 
   const imageUrl = Array.isArray(detailProduct.images)
     ? getImageUrl(detailProduct.images[0])
     : getImageUrl(detailProduct.images);
 
-  // Handle Buy button click
   const handleBuy = () => {
     if (!isLogged) return alert('Please login to add items to cart.');
     addCart(detailProduct);
@@ -51,9 +63,7 @@ const DetailProduct = () => {
         <h2>{detailProduct.title}</h2>
         <span>${detailProduct.price}</span>
         <p>{detailProduct.description}</p>
-        <Link to="/cart" onClick={handleBuy}>
-          Buy Now
-        </Link>
+        <button onClick={handleBuy}>Buy Now</button>
       </div>
     </div>
   );
