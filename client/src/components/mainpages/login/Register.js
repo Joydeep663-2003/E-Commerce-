@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Register = () => {
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
+const API_URL = process.env.REACT_APP_API_URL;
 
+const Register = () => {
+  const [user, setUser] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const onChangeInput = (e) => {
@@ -20,9 +17,11 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('/user/register', { ...user });
-      localStorage.setItem('firstLogin', true); // use 'firstLogin' for consistency with login flow
-      window.location.href = '/';
+      await axios.post(`${API_URL}/user/register`, user, {
+        withCredentials: true,
+      });
+      localStorage.setItem('firstLogin', true);
+      window.location.reload();
     } catch (err) {
       alert(err?.response?.data?.msg || 'Registration failed.');
     } finally {

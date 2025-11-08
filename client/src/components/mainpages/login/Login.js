@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
-  const [user, setUser] = useState({
-    email: '',
-    password: ''
-  });
+const API_URL = process.env.REACT_APP_API_URL;
 
+const Login = () => {
+  const [user, setUser] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const onChangeInput = (e) => {
@@ -19,13 +17,14 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('/user/login', user, {
-        withCredentials: true // ✅ Include cookies
+      await axios.post(`${API_URL}/user/login`, user, {
+        withCredentials: true,
       });
       localStorage.setItem('firstLogin', true);
-      window.location.href = '/';
+      // reload to update DataProvider
+      window.location.reload();
     } catch (err) {
-      alert(err?.response?.data?.msg || 'Login failed. Please try again.');
+      alert(err?.response?.data?.msg || 'Login failed.');
     } finally {
       setLoading(false);
     }

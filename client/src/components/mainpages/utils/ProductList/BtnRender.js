@@ -4,18 +4,20 @@ import { Link } from 'react-router-dom';
 
 const BtnRender = ({ product, deleteProduct }) => {
   const state = useContext(GlobalState);
-  const [isAdmin] = state.userAPI?.isAdmin || [false];
+  const [isAdmin] = state.isAdmin || [false];
+  const [isLogged] = state.isLogged || [false];
   const addCart = state.userAPI?.addCart || (() => {});
+
+  const handleBuy = () => {
+    if (!isLogged) return alert('Please login to add items to cart.');
+    addCart(product);
+  };
 
   return (
     <div className="row_btn">
       {isAdmin ? (
         <>
-          <button
-            type="button"
-            id="btn_delete"
-            onClick={() => deleteProduct(product._id, product.public_id)}
-          >
+          <button type="button" id="btn_delete" onClick={() => deleteProduct(product._id, product.public_id)}>
             Delete
           </button>
           <Link id="btn_edit" to={`/edit_product/${product._id}`}>
@@ -24,11 +26,7 @@ const BtnRender = ({ product, deleteProduct }) => {
         </>
       ) : (
         <>
-          <button
-            type="button"
-            id="btn_buy"
-            onClick={() => addCart(product)}
-          >
+          <button type="button" id="btn_buy" onClick={handleBuy}>
             Buy
           </button>
           <Link id="btn_view" to={`/detail/${product._id}`}>

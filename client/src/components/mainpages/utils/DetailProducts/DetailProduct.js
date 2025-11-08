@@ -5,12 +5,8 @@ import './detailProduct.css';
 
 const getImageUrl = (img) => {
   if (!img) return '';
-  if (typeof img === 'string') {
-    return img.startsWith('http') ? img : `http://localhost:5000${img}`;
-  }
-  if (img.url) {
-    return img.url.startsWith('http') ? img.url : `http://localhost:5000${img.url}`;
-  }
+  if (typeof img === 'string') return img.startsWith('http') ? img : `${process.env.REACT_APP_API_URL}${img}`;
+  if (img.url) return img.url.startsWith('http') ? img.url : `${process.env.REACT_APP_API_URL}${img.url}`;
   return '';
 };
 
@@ -18,10 +14,16 @@ const DetailProduct = () => {
   const { id } = useParams();
   const state = useContext(GlobalState);
 
+  // Get products array from GlobalState
   const [products] = state.productAPI.products || [[], () => {}];
+
+  // Get logged-in state and cart function
+  const [isLogged] = state.isLogged || [false];
   const addCart = state.userAPI?.addCart || (() => {});
+
   const [detailProduct, setDetailProduct] = useState(null);
 
+  // Find the product with the matching ID
   useEffect(() => {
     if (id && products.length > 0) {
       const found = products.find(product => product._id === id);
@@ -36,6 +38,12 @@ const DetailProduct = () => {
     ? getImageUrl(detailProduct.images[0])
     : getImageUrl(detailProduct.images);
 
+  // Handle Buy button click
+  const handleBuy = () => {
+    if (!isLogged) return alert('Please login to add items to cart.');
+    addCart(detailProduct);
+  };
+
   return (
     <div className="detail-product">
       <img src={imageUrl} alt={detailProduct.title} className="detail-img" />
@@ -43,7 +51,7 @@ const DetailProduct = () => {
         <h2>{detailProduct.title}</h2>
         <span>${detailProduct.price}</span>
         <p>{detailProduct.description}</p>
-        <Link to="/cart" onClick={() => addCart(detailProduct)}>
+        <Link to="/cart" onClick={handleBuy}>
           Buy Now
         </Link>
       </div>
