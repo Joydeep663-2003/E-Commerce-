@@ -24,7 +24,7 @@ const userCtrl = {
       res.cookie('refreshtoken', refreshtoken, {
         httpOnly: true,
         path: '/user/refresh_token',
-        sameSite: 'None',                // ✅ cross-domain support
+        sameSite: 'None',
         secure: process.env.NODE_ENV === 'production'
       });
 
@@ -41,7 +41,7 @@ const userCtrl = {
       if (!user) return res.status(400).json({ msg: "User does not exist" });
 
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ msg: "Incorrect Password" });
+      if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
 
       const accesstoken = createAccessToken({ id: user._id });
       const refreshtoken = createRefreshToken({ id: user._id });
@@ -53,7 +53,11 @@ const userCtrl = {
         secure: process.env.NODE_ENV === 'production'
       });
 
-      res.json({ accesstoken });
+      res.json({
+        accesstoken,
+        user: { id: user._id, name: user.name, email: user.email, role: user.role },
+        msg: "Login success!"
+      });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -62,7 +66,7 @@ const userCtrl = {
   refreshtoken: async (req, res) => {
     try {
       const rf_token = req.cookies.refreshtoken;
-      if (!rf_token) return res.status(401).json({ msg: "Please Login or Register" });
+      if (!rf_token) return res.status(401).json({ msg: "Please login or register" });
 
       jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(401).json({ msg: "Invalid refresh token" });
@@ -77,8 +81,12 @@ const userCtrl = {
 
   logout: async (req, res) => {
     try {
-      res.clearCookie('refreshtoken', { path: '/user/refresh_token' });
-      return res.json({ msg: "Logged out" });
+      res.clearCookie('refreshtoken', {
+        path: '/user/refresh_token',
+        sameSite: 'None',
+        secure: process.env.NODE_ENV === 'production'
+      });
+      return res.json({ msg: "Logged out successfully" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -92,11 +100,23 @@ const userCtrl = {
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
+  },
+
+  updateUserRole: async (req, res) => {
+    try {
+      await Users.findByIdAndUpdate(req.params.id, { role: req.body.role });
+      res.json({ msg: "User role updated successfully" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
   }
 };
 
-// Token generators
-const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
-const createRefreshToken = (payload) => jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+// Token creators
+const createAccessToken = (payload) =>
+  jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+
+const createRefreshToken = (payload) =>
+  jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
 module.exports = userCtrl;
