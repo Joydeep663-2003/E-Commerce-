@@ -11,10 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Allow requests from frontend with credentials
+// ✅ Allow requests from frontend with credentials (CORS)
 const allowedOrigins = [
   'http://localhost:3000',                     // local dev
-  'https://e-commerce-joydeep.vercel.app'     // deployed frontend
+  'https://e-commerce-joydeep.vercel.app'      // your Vercel frontend
 ];
 
 app.use(cors({
@@ -32,7 +32,7 @@ app.use(cors({
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ Routes
-app.use('/user', require('./routes/userRouter'));
+app.use('/api/user', require('./routes/userRouter'));  // 🔹 fixed base path
 app.use('/api/products', require('./routes/productRouter'));
 app.use('/api/upload', require('./routes/upload'));
 
@@ -40,6 +40,11 @@ app.use('/api/upload', require('./routes/upload'));
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ DB Connection Error:', err.message));
+
+// Default route (for Render health check)
+app.get('/', (req, res) => {
+  res.send('✅ Server is running');
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;
