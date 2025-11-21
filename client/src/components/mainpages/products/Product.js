@@ -6,7 +6,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [isAdmin] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL; // Must be set in Vercel env
+  const API_URL = process.env.REACT_APP_API_URL; // Must be set in Vercel
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,9 +30,11 @@ const Products = () => {
           key={product._id}
           product={{
             ...product,
-            images: product.images.map(img =>
-              img.startsWith('http') ? img : `${API_URL}${img}`
-            )
+            images: Array.isArray(product.images)
+              ? product.images.map(img =>
+                  img.startsWith('http') ? img : `${API_URL}${img}`
+                )
+              : [product.images?.startsWith('http') ? product.images : `${API_URL}${product.images}`]
           }}
           isAdmin={isAdmin}
         />

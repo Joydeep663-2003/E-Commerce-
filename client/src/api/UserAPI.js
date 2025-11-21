@@ -7,18 +7,17 @@ const UserAPI = (token) => {
   const [user, setUser] = useState({});
   const [cart, setCart] = useState([]);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     if (!token) return;
 
     const getUser = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/user/info`,
-          {
-            headers: { Authorization: token },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${API_URL}/api/user/info`, {
+          headers: { Authorization: token },
+          withCredentials: true,
+        });
 
         setIsLogged(true);
         setUser(res.data);
@@ -29,7 +28,7 @@ const UserAPI = (token) => {
     };
 
     getUser();
-  }, [token]);
+  }, [token, API_URL]);
 
   const addToCart = async (product) => {
     const check = cart.every((item) => item._id !== product._id);
@@ -38,14 +37,18 @@ const UserAPI = (token) => {
     const newCart = [...cart, { ...product, quantity: 1 }];
     setCart(newCart);
 
-    await axios.patch(
-      `${process.env.REACT_APP_API_URL}/api/user/addcart`,
-      { cart: newCart },
-      {
-        headers: { Authorization: token },
-        withCredentials: true,
-      }
-    );
+    try {
+      await axios.patch(
+        `${API_URL}/api/user/addcart`,
+        { cart: newCart },
+        {
+          headers: { Authorization: token },
+          withCredentials: true,
+        }
+      );
+    } catch (err) {
+      console.log("❌ Cart Error:", err.message);
+    }
   };
 
   return {
