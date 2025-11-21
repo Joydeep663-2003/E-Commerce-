@@ -8,13 +8,21 @@ const ProductAPI = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`, {
-          withCredentials: true
-        });
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/products`,
+          {
+            withCredentials: true
+          }
+        );
+
         console.log("Fetched Products:", res.data);
+
         setProducts(res.data.products || []);
       } catch (err) {
-        console.error("❌ Failed to fetch products:", err.response?.data?.msg || err.message);
+        console.error(
+          "❌ Failed to fetch products:",
+          err.response?.data?.msg || err.message
+        );
       } finally {
         setLoading(false);
       }
