@@ -11,13 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// ⭐ Allowed Frontend URLs (FINAL)
+// ⭐ Allowed Frontend URLs (FINAL + PERFECT)
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://e-commerce-xi-jade.vercel.app"   // your correct Vercel domain
+  "https://e-commerce-xi-jade.vercel.app",
+  /\.vercel\.app$/    // ⭐ allow ALL Vercel preview domains automatically
 ];
 
-// ⭐ CORS Setup (SIMPLE + PERFECT)
+// ⭐ CORS Setup
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
