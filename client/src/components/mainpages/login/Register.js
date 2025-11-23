@@ -18,7 +18,11 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/user/register`, user, { withCredentials: true });
+      await axios.post(
+        `${API_URL}/api/user/register`,
+        user,
+        { withCredentials: true }
+      );
       alert('Registration successful! Please login.');
       navigate('/login');
     } catch (err) {
