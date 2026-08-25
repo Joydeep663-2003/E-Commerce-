@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -33,6 +33,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/user", require("./routes/userRouter"));
 app.use("/api/products", require("./routes/productRouter"));
+app.use("/api/orders", require("./routes/orderRouter"));
 app.use("/api/upload", require("./routes/upload"));
 
 // MongoDB

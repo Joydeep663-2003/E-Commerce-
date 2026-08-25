@@ -131,6 +131,21 @@ const userCtrl = {
     }
   },
 
+  addAddress: async (req, res) => {
+    try {
+      const { fullName, phone, street, city, state, pincode, tag } = req.body;
+      const user = await Users.findById(req.user.id);
+      if (!user) return res.status(404).json({ msg: "User not found." });
+
+      const newAddress = { fullName, phone, street, city, state, pincode, tag: tag || 'Home' };
+      user.addresses.push(newAddress);
+      await user.save();
+
+      return res.json({ msg: "Address added successfully", addresses: user.addresses });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  }
 };
 
 // TOKEN GENERATORS

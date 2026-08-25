@@ -8,13 +8,23 @@ class APIfeatures {
 
   filtering() {
     const queryObj = { ...this.queryString };
-    const excludedFields = ['page', 'sort', 'limit'];
+    const excludedFields = ['page', 'sort', 'limit', 'search', 'category'];
     excludedFields.forEach(el => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, match => `$${match}`);
+    
+    let filter = JSON.parse(queryStr);
 
-    this.query = this.query.find(JSON.parse(queryStr));
+    if (this.queryString.category && this.queryString.category !== 'all' && this.queryString.category !== 'All') {
+      filter.category = { $regex: this.queryString.category, $options: 'i' };
+    }
+
+    if (this.queryString.search) {
+      filter.title = { $regex: this.queryString.search, $options: 'i' };
+    }
+
+    this.query = this.query.find(filter);
     return this;
   }
 
@@ -30,7 +40,7 @@ class APIfeatures {
 
   pagination() {
     const page = parseInt(this.queryString.page) || 1;
-    const limit = parseInt(this.queryString.limit) || 9;
+    const limit = parseInt(this.queryString.limit) || 12;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
     return this;
@@ -42,12 +52,17 @@ const productCtrl = {
     try {
       const features = new APIfeatures(Products.find(), req.query)
         .filtering()
-        .sorting()
-        .pagination();
-      const products = await features.query;
+        .sorting();
+      
+      const totalCount = await Products.countDocuments(features.query._conditions);
+
+      features.pagination();
+      const products = await features.query.lean();
+
       res.json({
         status: 'success',
         result: products.length,
+        total: totalCount,
         products
       });
     } catch (err) {

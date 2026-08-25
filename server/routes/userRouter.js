@@ -11,11 +11,10 @@ router.get('/refresh_token', userCtrl.refreshToken);
 
 // User Info
 router.get('/infor', auth, userCtrl.getUser);
+router.get('/info', auth, userCtrl.getUser);
 
-// Cart
+// Cart & Address
 router.patch('/addcart', auth, userCtrl.addCart);
-
-// REMOVE or COMMENT OUT this line (function does NOT exist)
-// router.patch('/user/:id/role', auth, authAdmin, userCtrl.updateUserRole);
+router.post('/address', auth, userCtrl.addAddress);
 
 module.exports = router;
