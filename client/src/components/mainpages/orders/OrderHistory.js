@@ -17,7 +17,7 @@ const OrderHistory = () => {
   };
 
   const getImageUrl = (img) => {
-    if (!img) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+    if (!img) return 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=80';
     
     let path = '';
     if (typeof img === 'string') {
@@ -25,7 +25,7 @@ const OrderHistory = () => {
     } else if (img.url) {
       path = img.url;
     } else {
-      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+      return 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=80';
     }
 
     if (path.startsWith('http') || path.startsWith('data:image')) {

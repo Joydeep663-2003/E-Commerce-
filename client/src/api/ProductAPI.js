@@ -25,10 +25,29 @@ const ProductAPI = () => {
 
         if (res.data && res.data.products) {
           const dbProducts = res.data.products;
-          const merged = [...dbProducts];
+          
+          // Map database products to ensure they use the new unique images
+          const enrichedDbProducts = dbProducts.map(dbP => {
+            const matchingSeed = seed100ProductsList.find(sp => 
+              sp.product_id === dbP.product_id || 
+              sp.title?.toLowerCase() === dbP.title?.toLowerCase()
+            );
+            if (matchingSeed) {
+              return {
+                ...dbP,
+                images: matchingSeed.images,
+                originalPrice: dbP.originalPrice || matchingSeed.originalPrice,
+                rating: dbP.rating || matchingSeed.rating,
+                numReviews: dbP.numReviews || matchingSeed.numReviews
+              };
+            }
+            return dbP;
+          });
+
+          const merged = [...enrichedDbProducts];
           
           seed100ProductsList.forEach(seedProd => {
-            const exists = dbProducts.some(dbP => 
+            const exists = enrichedDbProducts.some(dbP => 
               dbP.product_id === seedProd.product_id || 
               dbP.title?.toLowerCase() === seedProd.title?.toLowerCase()
             );
