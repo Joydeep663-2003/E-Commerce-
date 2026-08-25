@@ -18,9 +18,23 @@ const OrderHistory = () => {
 
   const getImageUrl = (img) => {
     if (!img) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
-    if (typeof img === 'string') return img;
-    if (img.url) return img.url;
-    return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+    
+    let path = '';
+    if (typeof img === 'string') {
+      path = img;
+    } else if (img.url) {
+      path = img.url;
+    } else {
+      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+    }
+
+    if (path.startsWith('http') || path.startsWith('data:image')) {
+      return path;
+    }
+
+    const API_URL = process.env.REACT_APP_API_URL || '';
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    return `${API_URL}${normalizedPath}`;
   };
 
   return (

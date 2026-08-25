@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { GlobalState } from '../../../GlobalState';
 import ProductList from '../utils/ProductList/ProductList';
 import './products.css';
 
-const categoriesList = [
+const defaultCategories = [
   'All',
   'Electronics',
   'Fashion',
@@ -26,10 +26,65 @@ const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
+  // Dynamically compute category counts to ensure every category has items
+  const categoryCounts = useMemo(() => {
+    const counts = { All: products.length };
+    defaultCategories.forEach(cat => {
+      if (cat !== 'All') counts[cat] = 0;
+    });
+
+    products.forEach(p => {
+      if (p.category) {
+        const matchingDefault = defaultCategories.find(
+          cat => cat !== 'All' && (
+            cat.toLowerCase() === p.category.toLowerCase() ||
+            p.category.toLowerCase().includes(cat.toLowerCase()) ||
+            cat.toLowerCase().includes(p.category.toLowerCase())
+          )
+        );
+
+        if (matchingDefault) {
+          counts[matchingDefault] = (counts[matchingDefault] || 0) + 1;
+        } else {
+          counts[p.category] = (counts[p.category] || 0) + 1;
+        }
+      }
+    });
+
+    return counts;
+  }, [products]);
+
+  const activeCategoryList = useMemo(() => {
+    const uniqueFromProducts = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+    const merged = ['All'];
+    
+    defaultCategories.forEach(cat => {
+      if (cat !== 'All' && !merged.includes(cat)) merged.push(cat);
+    });
+
+    uniqueFromProducts.forEach(cat => {
+      const exists = merged.some(m => m.toLowerCase() === cat.toLowerCase());
+      if (!exists) merged.push(cat);
+    });
+
+    return merged;
+  }, [products]);
+
   // Filter products by category & search
   const filteredProducts = products.filter((prod) => {
-    const matchCat = category === 'All' || prod.category?.toLowerCase() === category.toLowerCase();
-    const matchSearch = !search || prod.title?.toLowerCase().includes(search.toLowerCase()) || prod.description?.toLowerCase().includes(search.toLowerCase());
+    let matchCat = category === 'All';
+
+    if (!matchCat && prod.category) {
+      const pCat = prod.category.toLowerCase();
+      const selCat = category.toLowerCase();
+      matchCat = pCat === selCat || pCat.includes(selCat) || selCat.includes(pCat);
+    }
+
+    const matchSearch = !search ||
+      prod.title?.toLowerCase().includes(search.toLowerCase()) ||
+      prod.description?.toLowerCase().includes(search.toLowerCase()) ||
+      prod.category?.toLowerCase().includes(search.toLowerCase());
+
     return matchCat && matchSearch;
   });
 
@@ -55,23 +110,27 @@ const Product = () => {
 
   return (
     <div className="products-page-container">
-      {/* Category Pills Bar */}
+      {/* Category Pills Bar with Item Counts */}
       <div className="category-filter-bar">
-        {categoriesList.map((catName) => (
-          <button
-            key={catName}
-            className={`category-pill ${category === catName ? 'active' : ''}`}
-            onClick={() => handleCategoryChange(catName)}
-          >
-            {catName}
-          </button>
-        ))}
+        {activeCategoryList.map((catName) => {
+          const count = categoryCounts[catName] || 0;
+          return (
+            <button
+              key={catName}
+              className={`category-pill ${category === catName ? 'active' : ''}`}
+              onClick={() => handleCategoryChange(catName)}
+            >
+              {catName} <span className="cat-count-badge">({count})</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter Controls Bar */}
       <div className="filter-controls-bar">
         <div className="results-count">
           Showing {paginatedProducts.length} of {sortedProducts.length} Products
+          {category !== 'All' && ` in "${category}"`}
           {search && ` for "${search}"`}
         </div>
 
@@ -107,6 +166,9 @@ const Product = () => {
         <div style={{ textAlign: 'center', padding: '60px 20px' }}>
           <h3>No products found matching your search.</h3>
           <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Try switching category or search keywords.</p>
+          <button className="btn-primary" style={{ marginTop: '16px' }} onClick={() => { setCategory('All'); handleCategoryChange('All'); }}>
+            View All Categories
+          </button>
         </div>
       ) : (
         <div className="products-grid">

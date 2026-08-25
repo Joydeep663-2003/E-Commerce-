@@ -62,11 +62,31 @@ const DetailProduct = () => {
     );
   }
 
+  const getImageUrl = (img) => {
+    if (!img) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+    
+    let path = '';
+    if (typeof img === 'string') {
+      path = img;
+    } else if (img.url) {
+      path = img.url;
+    } else {
+      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80';
+    }
+
+    if (path.startsWith('http') || path.startsWith('data:image')) {
+      return path;
+    }
+
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    return `${API_URL}${normalizedPath}`;
+  };
+
   // Extract images array
   const rawImages = detailProduct.images;
   const imagesList = Array.isArray(rawImages)
-    ? rawImages.map(img => typeof img === 'string' ? img : img.url || '')
-    : [typeof rawImages === 'string' ? rawImages : rawImages?.url || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80'];
+    ? rawImages.map(img => getImageUrl(img))
+    : [getImageUrl(rawImages)];
 
   const activeImage = imagesList[selectedImgIndex] || imagesList[0];
 

@@ -1,4 +1,4 @@
-// 100 High Quality Seed Products for instant frontend loading and backend database seeding
+// 160 High Quality Seed Products (20 products per category across 8 categories)
 const categories = [
   "Electronics",
   "Fashion",
@@ -63,7 +63,8 @@ const sampleProductImages = {
 
 const titlePrefixes = [
   "Premium", "Pro", "Ultra", "Wireless", "Smart", "Luxury", "Classic", "Modern", "Ergonomic",
-  "High-Performance", "Eco-Friendly", "Elite", "Compact", "Signature", "Advanced", "Urban"
+  "High-Performance", "Eco-Friendly", "Elite", "Compact", "Signature", "Advanced", "Urban",
+  "Deluxe", "Apex", "Studio", "Vanguard"
 ];
 
 const productTemplates = {
@@ -71,53 +72,77 @@ const productTemplates = {
     "Noise-Cancelling Wireless Headphones", "AMOLED Smartwatch with SpO2", "True Wireless Earbuds with ANC",
     "Portable Bluetooth Speaker 30W", "Ultra-Slim Power Bank 20,000mAh", "4K Ultra HD Action Camera",
     "Smart Security WiFi Camera", "Fast Dual-Port GaN Charger 65W", "Foldable Drone 4K HD",
-    "High-Fidelity Soundbar 120W", "E-Book Reader Paperwhite", "Smart Fitness Tracker Band"
+    "High-Fidelity Soundbar 120W", "E-Book Reader Paperwhite", "Smart Fitness Tracker Band",
+    "Smart Home Voice Assistant Speaker", "USB-C Multi-Port Hub Adapter", "High-Speed Wi-Fi 6 Router",
+    "Magnetic Wireless Car Mount Charger", "Digital Audio Voice Recorder", "Electric Toothbrush Sonic",
+    "Portable Mini Projector 1080p", "Smart Doorbell Video Camera"
   ],
   Fashion: [
     "Genuine Leather Biker Jacket", "Slim Fit Stretch Denim Jeans", "Classic Cotton Crewneck T-Shirt",
     "Tailored Formal Blazer", "Over-Sized Streetwear Hoodie", "Breathable Linen Casual Shirt",
     "Thermal Winter Windcheater Jacket", "Traditional Printed Kurta Set", "Casual Polo Shirt Soft Cotton",
-    "All-Weather Utility Cargo Pants", "Designer Summer Floral Dress", "Heavyweight Fleece Sweatshirt"
+    "All-Weather Utility Cargo Pants", "Designer Summer Floral Dress", "Heavyweight Fleece Sweatshirt",
+    "Plaid Flannel Button-Down Shirt", "Athletic Activewear Tracksuit", "Quilted Puffer Winter Vest",
+    "Chino Trousers Slim Stretch", "Boho Maxi Printed Dress", "Satin Nightwear Lounge Set",
+    "Denim Trucker Jacket Vintage", "Merino Wool V-Neck Sweater"
   ],
   Footwear: [
     "Pro Cushion Running Shoes", "Retro Leather Sneakers", "Waterproof Outdoor Trekking Boots",
     "Handcrafted Italian Formal Oxfords", "Lightweight Mesh Gym Trainers", "Orthopedic Soft Comfort Sandals",
     "High-Top Canvas Streetwear Shoes", "Slip-On Breathable Loafers", "Trail Blazer Sports Shoes",
-    "All-Day Walking Comfort Shoes", "Classic Suede Chelsea Boots", "Non-Slip Beach Slides"
+    "All-Day Walking Comfort Shoes", "Classic Suede Chelsea Boots", "Non-Slip Beach Slides",
+    "Performance Tennis Court Shoes", "Formal Monk Strap Leather Shoes", "Water Sandals Outdoor River",
+    "Minimalist Barefoot Running Shoes", "Leather Ankle Dress Boots", "Lightweight Marathon Racing Flats",
+    "Fleece-Lined Winter Boots", "Espadrille Casual Canvas Shoes"
   ],
   "Watches & Accessories": [
     "Automatic Chronograph Men's Watch", "Minimalist Quartz Watch", "UV400 Polarized Aviator Sunglasses",
     "Genuine Grain Leather RFID Wallet", "Water-Resistant Laptop Backpack 30L", "Adjustable Genuine Leather Belt",
     "Smart Hybrid Steel Watch", "Travel Duffel Bag Canvas", "Titanium Frame Blue Light Glasses",
-    "Stainless Steel Link Bracelet Watch", "Anti-Theft Commuter Backpack", "Full-Grain Leather Card Holder"
+    "Stainless Steel Link Bracelet Watch", "Anti-Theft Commuter Backpack", "Full-Grain Leather Card Holder",
+    "Sports Digital Stopwatch Watch", "Silk Tie & Pocket Square Set", "Leather Messenger Shoulder Bag",
+    "Square Retro Acetate Sunglasses", "Tactical Outdoor Utility Belt", "Canvas Tote Shoulder Bag",
+    "Key Organizer Leather Holder", "Waterproof Gym Sports Bag"
   ],
   "Home & Kitchen": [
     "Espresso Coffee Machine 15-Bar", "Digital Air Fryer 5.5L", "Robotic Vacuum Cleaner with Mop",
     "Smart RGB Ambient LED Desk Lamp", "Stainless Steel Electric Kettle 1.8L", "Non-Stick Ceramic Cookware Set",
     "Multi-Function Blender & Juicer", "Smart Air Purifier with HEPA Filter", "Infrared Electric Induction Cooktop",
-    "Cold Press Slow Juicer", "Insulated Vacuum Water Bottle 1L", "Programmable Bread Maker Machine"
+    "Cold Press Slow Juicer", "Insulated Vacuum Water Bottle 1L", "Programmable Bread Maker Machine",
+    "Microwave Oven Solo 20L", "Handheld Garment Steamer", "Automatic Milk Frother & Heater",
+    "Cast Iron Dutch Oven Pot", "Digital Food Kitchen Scale", "Under-Cabinet Motion Sensor Lights",
+    "Stainless Steel Cutlery Set 24-Piece", "French Press Coffee Maker 1L"
   ],
   "Skincare & Beauty": [
     "Vitamin C Radiance Face Serum", "Hydrating Hyaluronic Gel Moisturizer", "Luxury Eau De Parfum 100ml",
     "Ionic Professional Hair Dryer 2000W", "All-in-One Cordless Beard Trimmer", "Organic Argan Oil Hair Mask",
     "Gentle Foaming Cleanser 200ml", "SPF 50+ Invisible Sunscreen Gel", "Retinol Night Repair Cream",
-    "Charcoal Deep Pore Scrub", "Natural Botanical Face Mist", "Sonic Facial Cleansing Brush"
+    "Charcoal Deep Pore Scrub", "Natural Botanical Face Mist", "Sonic Facial Cleansing Brush",
+    "Niacinamide 10% Blemish Serum", "Ceramide Barrier Repair Moisturizer", "Rose Water Facial Toner Spray",
+    "Keratin Hair Straightening Brush", "Body Butter Shea & Cocoa 250g", "Exfoliating AHA BHA Peeling Solution",
+    "Matte Velvet Liquid Lipstick", "Eyelash & Eyebrow Growth Serum"
   ],
   "Gaming & Tech": [
     "RGB Mechanical Gaming Keyboard", "Ultralight Wireless Gaming Mouse", "7.1 Surround Sound Gaming Headset",
     "Curved Gaming Monitor 165Hz 27-inch", "Ergonomic Mesh Gaming Chair", "Adjustable Aluminum Laptop Stand",
     "High-Speed PCIe NVMe 1TB SSD", "HD Streamer Webcam 1080p 60fps", "USB Condenser Studio Microphone",
-    "Large Anti-Slip Desk Pad Mousemat", "Wireless Bluetooth Game Controller", "VR Headset Stand & Dock"
+    "Large Anti-Slip Desk Pad Mousemat", "Wireless Bluetooth Game Controller", "VR Headset Stand & Dock",
+    "External Hard Drive 2TB Rugged", "Dual Monitor Desktop Stand", "Custom Coiled Keyboard Cable RGB",
+    "Capture Card 4K HDMI Pass-Through", "Graphic Drawing Tablet Pen", "Green Screen Foldable Backdrop",
+    "Console Cooling Stand Dock", "Smart RGB LED Light Bars Pair"
   ],
   "Books & Office": [
     "Ergonomic Lumbar Executive Chair", "Solid Wood Electric Height Desk", "Classic Hardcover Journal Notebook",
     "Precision Metal Fountain Pen", "Magnetic Whiteboard Desk Organizer", "Desk Dual Monitor Arm Mount",
     "Cable Management Sleeve System", "Minimalist Felt Desk Mat", "Professional Planner & Task Tracker",
-    "Dimmable LED Screenbar Monitor Light", "Compact Document Shredder", "Rechargeable Wireless Office Mouse"
+    "Dimmable LED Screenbar Monitor Light", "Compact Document Shredder", "Rechargeable Wireless Office Mouse",
+    "Leather Desk Writing Pad 80x40cm", "Ergonomic Vertical Wireless Mouse", "Highlighter Pen Set 6 Colors",
+    "Metal Bookend Heavy Duty Pair", "Desk Fan Ultra-Quiet USB", "Footrest Cushion Ergonomic Foam",
+    "Thermal Label Printer Wireless", "A5 Dotted Grid Bullet Journal"
   ]
 };
 
-const generate100Products = () => {
+const generate160Products = () => {
   const list = [];
   let count = 1;
 
@@ -130,11 +155,9 @@ const generate100Products = () => {
       const prefix = titlePrefixes[(count + idx) % titlePrefixes.length];
       const title = `${prefix} ${tmplName}`;
       
-      // Calculate realistic Indian Rupee prices (INR)
       const basePrice = Math.floor((count * 177 + idx * 450 + 499) % 15000) + 499;
       const originalPrice = Math.floor(basePrice * 1.35);
 
-      // Generate 4 image URLs per product for multi-image gallery
       const img1 = categoryImages[idx % categoryImages.length];
       const img2 = categoryImages[(idx + 1) % categoryImages.length];
       const img3 = categoryImages[(idx + 2) % categoryImages.length];
@@ -172,41 +195,7 @@ const generate100Products = () => {
     });
   });
 
-  // Fill up remaining to reach exactly 100 products
-  while (list.length < 100) {
-    const idx = list.length;
-    const cat = categories[idx % categories.length];
-    const pId = `PROD-${String(count).padStart(3, '0')}`;
-    const categoryImages = sampleProductImages[cat];
-    const title = `Signature Edition ${cat} Item #${count}`;
-    const basePrice = Math.floor((count * 189 + 899) % 18000) + 799;
-
-    list.push({
-      _id: `prod_seed_${count}`,
-      product_id: pId,
-      title,
-      price: basePrice,
-      originalPrice: Math.floor(basePrice * 1.3),
-      description: `Exclusive release ${title} offering superior craftsmanship and reliability. Standard 1-Year Indian Warranty and Express Delivery included.`,
-      content: `Full Feature Breakdown for ${title}:\n- Premium Materials\n- Fast Shipping across India\n- Customer Support Included`,
-      images: [
-        { public_id: `${pId}-1`, url: categoryImages[0] },
-        { public_id: `${pId}-2`, url: categoryImages[1] },
-        { public_id: `${pId}-3`, url: categoryImages[2] },
-        { public_id: `${pId}-4`, url: categoryImages[3] }
-      ],
-      category: cat,
-      rating: 4.8,
-      numReviews: 88,
-      inStock: true,
-      checked: false,
-      sold: 42,
-      createdAt: new Date().toISOString()
-    });
-    count++;
-  }
-
   return list;
 };
 
-export const seed100ProductsList = generate100Products();
+export const seed100ProductsList = generate160Products();

@@ -49,6 +49,12 @@
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
+.cat-count-badge {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
 /* Filter Controls Bar */
 .filter-controls-bar {
   display: flex;
