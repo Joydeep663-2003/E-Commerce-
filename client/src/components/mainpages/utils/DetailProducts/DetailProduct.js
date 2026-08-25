@@ -112,7 +112,11 @@ const DetailProduct = () => {
         {/* Gallery Section */}
         <div className="gallery-section">
           <div className="main-image-box">
-            <img src={activeImage} alt={detailProduct.title} />
+            <img 
+              src={activeImage} 
+              alt={detailProduct.title} 
+              onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80'; }} 
+            />
           </div>
           {imagesList.length > 1 && (
             <div className="thumbnails-row">
@@ -122,7 +126,11 @@ const DetailProduct = () => {
                   className={`thumbnail-btn ${selectedImgIndex === idx ? 'active' : ''}`}
                   onClick={() => setSelectedImgIndex(idx)}
                 >
-                  <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} />
+                  <img 
+                    src={imgUrl} 
+                    alt={`Thumbnail ${idx + 1}`} 
+                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80'; }} 
+                  />
                 </button>
               ))}
             </div>

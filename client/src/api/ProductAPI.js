@@ -23,9 +23,22 @@ const ProductAPI = () => {
           { withCredentials: true }
         );
 
-        if (res.data && res.data.products && res.data.products.length > 0) {
-          setProducts(res.data.products);
-          setResult(res.data.total || res.data.products.length);
+        if (res.data && res.data.products) {
+          const dbProducts = res.data.products;
+          const merged = [...dbProducts];
+          
+          seed100ProductsList.forEach(seedProd => {
+            const exists = dbProducts.some(dbP => 
+              dbP.product_id === seedProd.product_id || 
+              dbP.title?.toLowerCase() === seedProd.title?.toLowerCase()
+            );
+            if (!exists) {
+              merged.push(seedProd);
+            }
+          });
+
+          setProducts(merged);
+          setResult(merged.length);
         }
       } catch (err) {
         console.log('Using instant fast product cache:', err.message);

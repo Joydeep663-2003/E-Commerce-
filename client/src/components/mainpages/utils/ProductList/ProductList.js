@@ -48,7 +48,11 @@ const ProductList = ({ product }) => {
   return (
     <div className="product_card">
       <div className="product-img-wrapper">
-        <img src={primaryImage} alt={product.title || 'Product'} />
+        <img 
+          src={primaryImage} 
+          alt={product.title || 'Product'} 
+          onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80'; }} 
+        />
         {product.category && <span className="category-tag">{product.category}</span>}
         <span className="rating-tag"><MdOutlineStar color="#f59e0b" /> {product.rating || '4.5'}</span>
       </div>
